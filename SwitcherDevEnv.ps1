@@ -17,7 +17,7 @@ function switchJavaInteractively
 
 function removeFromEnvironmentPath{
     param([string]$pathToRemove = "")
-    $env:Path = $env:Path.Replace($pathToRemove,"")
+    [Environment]::SetEnvironmentVariable("Path",$env:Path.Replace($pathToRemove, ""))
     removeDoubleSemicolonsInPath
 }
 
@@ -25,11 +25,13 @@ function setJavaHomeTo
 {
     param([string]$newJavaHome)
     $env:JAVA_HOME = $newJavaHome
+
+    [Environment]::SetEnvironmentVariable("JAVA_HOME", $newJavaHome)
 }
 
 function addJavaHomeToPath
 {
-    $env:Path = $env:JAVA_HOME + "\bin;" + $env:Path
+    [Environment]::SetEnvironmentVariable("Path", $env:JAVA_HOME + "\bin;" + $env:Path)
 }
 
 function getUserChoiceFor
@@ -44,7 +46,6 @@ function getUserChoiceFor
     }
 
     $userInput = Read-Host "Input: "
-    #todo marmer read: https://stackoverflow.com/questions/50595251/adding-java-home-to-system-variable-path-via-powershell
     #todo marmer handle invalid input
     return $paths[$userInput]
 }
@@ -58,5 +59,5 @@ function removeDoubleSemicolonsInPath
     $env:Path = $env:Path.Replace(";;", ";")
 }
 
-removeDoubleSemicolonsInPath
+
 switchJavaInteractively
